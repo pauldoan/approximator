@@ -52,19 +52,37 @@ body {
   background-color: rgb(50, 50, 50);
 }
 
-.container#buttons {
+.container#tools {
   display: flex;
-  flex: 5;
+  flex-direction: column;
+  background-color: rgb(117, 117, 117);
   box-sizing: border-box;
   width: 90%;
   border-radius: 20px;
   margin-bottom: 20px;
-  background-color: rgb(117, 117, 117);
   overflow: hidden;
+  flex: 5;
 }
-.container#digit-buttons {
+
+.container#main-buttons {
   display: flex;
   flex: 7;
+  box-sizing: border-box;
+}
+
+.container#option-buttons {
+  display: flex;
+  flex: 1;
+  box-sizing: border-box;
+  justify-content: center;
+  align-items: center;
+  padding: 5px;
+  padding-bottom: 0px;
+}
+
+.container#digit-buttons {
+  display: flex;
+  flex: 8;
   box-sizing: border-box;
   flex-wrap: wrap;
   justify-content: center;
@@ -80,11 +98,12 @@ body {
   justify-content: center;
   align-items: center;
   padding: 5px;
+  padding-left: 0px;
 }
 
 button.digit {
-  width: 29%;
-  height: 80px;
+  flex-basis: 29%;
+  height: 70px;
   margin: 5px;
   border-radius: 20px;
   box-sizing: border-box;
@@ -95,9 +114,21 @@ button.digit {
 }
 
 button.operation {
-  width: 100%;
+  flex-basis: 100%;
   margin: 5px;
-  height: 80px;
+  height: 70px;
+  border-radius: 20px;
+  box-sizing: border-box;
+  background-color: rgb(79, 79, 79);
+  border: none;
+  font-size: 30px;
+  color: white;
+}
+
+button.option {
+  margin: 5px;
+  flex: 1;
+  height: 50px;
   border-radius: 20px;
   box-sizing: border-box;
   background-color: rgb(79, 79, 79);
