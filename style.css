@@ -101,9 +101,10 @@ body {
   padding-left: 0px;
 }
 
-button.digit {
+button.digit,
+button.equal {
   flex-basis: 29%;
-  height: 70px;
+  height: 75px;
   margin: 5px;
   border-radius: 20px;
   box-sizing: border-box;
@@ -116,7 +117,7 @@ button.digit {
 button.operation {
   flex-basis: 100%;
   margin: 5px;
-  height: 70px;
+  height: 75px;
   border-radius: 20px;
   box-sizing: border-box;
   background-color: rgb(79, 79, 79);
