@@ -1,0 +1,111 @@
+html {
+  /* footer support */
+  position: relative;
+  min-height: 100%;
+}
+
+body {
+  font-family: "Trebuchet MS", "Lucida Sans Unicode", "Lucida Grande",
+    "Lucida Sans", Arial, sans-serif;
+  background-color: #333;
+}
+
+.header {
+  padding: 10px 0;
+}
+
+.title {
+  text-align: center;
+  font-size: 80px;
+  color: white;
+}
+
+.container#window {
+  display: flex;
+  justify-content: center;
+}
+
+.container#calculator {
+  width: 400px;
+  height: 600px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  border-radius: 20px;
+
+  background-color: rgb(79, 79, 79);
+}
+
+.container#screen {
+  width: 90%;
+  display: flex;
+  margin: 20px;
+  box-sizing: border-box;
+  border-radius: 20px;
+  flex: 1;
+  padding: 20px;
+  color: white;
+  font-size: 30px;
+  justify-content: flex-end;
+  align-items: center;
+  background-color: rgb(50, 50, 50);
+}
+
+.container#buttons {
+  display: flex;
+  flex: 5;
+  box-sizing: border-box;
+  width: 90%;
+  border-radius: 20px;
+  margin-bottom: 20px;
+  background-color: rgb(117, 117, 117);
+  overflow: hidden;
+}
+.container#digit-buttons {
+  display: flex;
+  flex: 7;
+  box-sizing: border-box;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  padding: 5px;
+}
+
+.container#operation-buttons {
+  display: flex;
+  flex: 2;
+  box-sizing: border-box;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  padding: 5px;
+}
+
+button.digit {
+  width: 29%;
+  height: 80px;
+  margin: 5px;
+  border-radius: 20px;
+  box-sizing: border-box;
+  background-color: rgb(79, 79, 79);
+  border: none;
+  font-size: 30px;
+  color: white;
+}
+
+button.operation {
+  width: 100%;
+  margin: 5px;
+  height: 80px;
+  border-radius: 20px;
+  box-sizing: border-box;
+  background-color: rgb(79, 79, 79);
+  border: none;
+  font-size: 30px;
+  color: white;
+}
+
+button:hover {
+  background-color: rgb(103, 103, 103);
+}
