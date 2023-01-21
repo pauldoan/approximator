@@ -1,4 +1,5 @@
-const screen = document.querySelector("#screen");
+const topDisplay = document.querySelector("#topValue");
+const bottomDisplay = document.querySelector("#bottomValue");
 const deleteBtn = document.querySelector("#delete");
 const clearBtn = document.querySelector("#clear");
 const addBtn = document.querySelector("#add");
@@ -17,37 +18,48 @@ const n6Btn = document.querySelector("#button6");
 const n7Btn = document.querySelector("#button7");
 const n8Btn = document.querySelector("#button8");
 const n9Btn = document.querySelector("#button9");
-const digitBtns = document.querySelectorAll(".digit");
+const digitBtns = document.querySelectorAll(".digit,.operation");
 const welcomeMessage = "Hi!";
-let currentValue = "";
+let topValue = "";
+let bottomValue = "";
 
 function displayScreen() {
-  screen.textContent = currentValue;
+  topDisplay.textContent = topValue;
+  bottomDisplay.textContent = bottomValue;
 }
 
 function clearScreen() {
-  currentValue = "";
+  topValue = "";
+  bottomValue = "";
   displayScreen();
 }
 
 function deleteScreen() {
-  currentValue = currentValue.slice(0, -1);
+  bottomValue = bottomValue.slice(0, -1);
   displayScreen();
 }
 
 clearBtn.addEventListener("click", clearScreen);
 deleteBtn.addEventListener("click", deleteScreen);
 
-function inputButton(value) {
-  currentValue = currentValue === welcomeMessage ? value : currentValue + value;
+function inputButton() {
+  // reset the welcome message
+  if (bottomValue === welcomeMessage) {
+    bottomValue = "";
+  }
+  // if we add digit
+  if (this.className === "digit") {
+    bottomValue += this.value;
+  }
+  // if we add operation
+  else {
+    topValue = bottomValue + this.value;
+    bottomValue = "";
+  }
   displayScreen();
 }
 
-digitBtns.forEach((button) =>
-  button.addEventListener("click", (e) => {
-    inputButton(e.target.value);
-  })
-);
+digitBtns.forEach((button) => button.addEventListener("click", inputButton));
 
 function addNumbers(a, b) {
   return a + b;
@@ -68,5 +80,8 @@ function operate(operator, a, b) {
   return operator(a, b);
 }
 
-window.addEventListener("load", () => (currentValue = welcomeMessage));
+function getResult(expression) {}
+
+window.addEventListener("load", () => (bottomValue = welcomeMessage));
+window.addEventListener("load", () => (topValue = ""));
 window.addEventListener("load", displayScreen);
