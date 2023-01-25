@@ -25,6 +25,21 @@ let mode;
 const welcomeMessage = "Hi!";
 let topValue = "";
 let bottomValue = "";
+
+clearBtn.addEventListener("click", clearScreen);
+deleteBtn.addEventListener("click", deleteScreen);
+equalBtn.addEventListener("click", compute);
+modeBtn.addEventListener("click", changeMode);
+digitBtns.forEach((button) =>
+  button.addEventListener("click", (e) => inputButton(e.target.value))
+);
+
+window.addEventListener("load", () => (bottomValue = welcomeMessage));
+window.addEventListener("load", () => (topValue = ""));
+window.addEventListener("load", () => (mode = "approximator"));
+window.addEventListener("load", displayScreen);
+window.addEventListener("keydown", handleKeyboardInput);
+
 const operationMap = {
   "+": addNumbers,
   "-": subtractNumbers,
@@ -32,11 +47,26 @@ const operationMap = {
   "÷": divideNumbers,
 };
 
+function handleKeyboardInput(e) {
+  if (
+    (e.key >= 0 && e.key <= 9) ||
+    e.key === "." ||
+    e.key === "+" ||
+    e.key === "-" ||
+    e.key === "*"
+  )
+    inputButton(e.key);
+  if (e.key === "=" || e.key === "Enter") compute();
+  if (e.key === "Backspace") deleteScreen();
+  if (e.key === "Escape") clearScreen();
+  if (e.key === "/") inputButton("÷");
+}
+
 function funAnswer(result) {
   const nAnswers = 5;
   const randNb = Math.random() * nAnswers;
   if (randNb < 1) {
-    return `I believe it's half of ${2 * result}`;
+    return `It's half of ${2 * result}`;
   } else if (randNb < 2) {
     return `Approx. a third of ${3 * result}`;
   } else if (randNb < 3) {
@@ -46,7 +76,7 @@ function funAnswer(result) {
       return `It's below 100...`;
     }
   } else if (randNb < 4) {
-    return `It's between ${result - 1} and ${result + 1}`;
+    return `Between ${result - 1} and ${result + 1}`;
   } else {
     return `It's close to ${Math.round(result)}`;
   }
@@ -67,8 +97,6 @@ function changeMode() {
   displayScreen();
 }
 
-modeBtn.addEventListener("click", changeMode);
-
 function displayScreen() {
   topDisplay.textContent = topValue;
   bottomDisplay.textContent = bottomValue;
@@ -85,16 +113,21 @@ function deleteScreen() {
   displayScreen();
 }
 
-clearBtn.addEventListener("click", clearScreen);
-deleteBtn.addEventListener("click", deleteScreen);
-
-function inputButton() {
+function inputButton(value) {
   // if still on welcome screen, we reset
   if (bottomValue === welcomeMessage) {
     bottomValue = "";
   }
+  // if we press decimal button and there is already one, do nothing
+  if (/^\d*\.\d*/.test(bottomValue) && value === ".") {
+    // don't do anything
+    return;
+  }
   // if we add digit, we append to the bottom value
-  if (this.className === "digit") {
+  if (
+    value in ["1", "2", "3", "4", "5", "6", "7", "8", "9", "0"] ||
+    value === "."
+  ) {
     // if we are in approximator and computation was just done, we auto first reset
     if (
       mode === "approximator" &&
@@ -102,18 +135,18 @@ function inputButton() {
     ) {
       clearScreen();
     }
-    bottomValue += this.value;
+    bottomValue += value;
   }
   // if the first button pressed is a minus sign,
   // we still append to digits for negative numbers
   else if (
-    this.id === "subtract" &&
+    value === "-" &&
     (bottomValue === "" ||
       (mode === "approximator" &&
         /^-?\.?\d+(\.\d+)? [+x\-÷] \d+(\.\d+)? ≃$/.test(topValue)))
   ) {
     topValue = "";
-    bottomValue = this.value;
+    bottomValue = value;
   }
   // if we add operation, we shift to top value and wait for next expression
   else if (/^-?\.?\d+(\.\d+)?$/.test(bottomValue)) {
@@ -140,20 +173,19 @@ function inputButton() {
       // we compute the result by simulating an equal
       result = getResult();
       // we append the sign to the result and move to next step
-      topValue = result[0] + " " + this.value;
+      topValue = result[0] + " " + value;
       bottomValue = "";
     }
 
     // any other case
     else {
-      topValue = bottomValue + " " + this.value;
+      topValue = bottomValue + " " + value;
       bottomValue = "";
     }
   }
   displayScreen();
 }
 
-// calculator mode
 function getResult() {
   const firstValue = Number(topValue.slice(0, -1));
   const secondValue = Number(bottomValue);
@@ -163,8 +195,6 @@ function getResult() {
   const fullOperation = `${firstValue} ${operation} ${bottomValue} ${equalBtn.textContent}`;
   return [result, fullOperation];
 }
-
-digitBtns.forEach((button) => button.addEventListener("click", inputButton));
 
 function compute() {
   // if operation has been done and we re-press equal, don't do anything
@@ -197,8 +227,6 @@ function compute() {
   }
 }
 
-equalBtn.addEventListener("click", compute);
-
 function addNumbers(a, b) {
   return a + b;
 }
@@ -217,8 +245,3 @@ function divideNumbers(a, b) {
 function operate(operator, a, b) {
   return operator(a, b);
 }
-
-window.addEventListener("load", () => (bottomValue = welcomeMessage));
-window.addEventListener("load", () => (topValue = ""));
-window.addEventListener("load", () => (mode = "approximator"));
-window.addEventListener("load", displayScreen);

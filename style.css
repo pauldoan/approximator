@@ -48,6 +48,9 @@ body {
   padding: 20px;
   justify-content: flex-end;
   align-items: flex-end;
+  overflow: hidden;
+  text-overflow: ellipsis; /*cut off text with an ellipsis*/
+  white-space: nowrap; /*keep text on one line */
   background-color: rgb(50, 50, 50);
 }
 
@@ -62,8 +65,8 @@ body {
   color: white;
   font-size: 30px;
   flex: 1;
-  display: flex;
-  flex-wrap: nowrap;
+  display: inline-block;
+  white-space: nowrap; /*keep text on one line */
 }
 
 .container#tools {
