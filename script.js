@@ -38,7 +38,7 @@ function funAnswer(result) {
   if (randNb < 1) {
     return `I believe it's half of ${2 * result}`;
   } else if (randNb < 2) {
-    return `Approximately a third of ${3 * result}`;
+    return `Approx. a third of ${3 * result}`;
   } else if (randNb < 3) {
     if (result > 100) {
       return `Wow, that's a big number!`;
@@ -48,7 +48,7 @@ function funAnswer(result) {
   } else if (randNb < 4) {
     return `It's between ${result - 1} and ${result + 1}`;
   } else {
-    return `It's around ${Math.round(result)}`;
+    return `It's close to ${Math.round(result)}`;
   }
 }
 
@@ -98,7 +98,7 @@ function inputButton() {
     // if we are in approximator and computation was just done, we auto first reset
     if (
       mode === "approximator" &&
-      /^-?\d+(\.\d+)? [+x\-÷] \d+(\.\d+)? ≃$/.test(topValue)
+      /^-?\.?\d+(\.\d+)? [+x\-÷] \d+(\.\d+)? ≃$/.test(topValue)
     ) {
       clearScreen();
     }
@@ -110,24 +110,24 @@ function inputButton() {
     this.id === "subtract" &&
     (bottomValue === "" ||
       (mode === "approximator" &&
-        /^-?\d+(\.\d+)? [+x\-÷] \d+(\.\d+)? ≃$/.test(topValue)))
+        /^-?\.?\d+(\.\d+)? [+x\-÷] \d+(\.\d+)? ≃$/.test(topValue)))
   ) {
     topValue = "";
     bottomValue = this.value;
   }
   // if we add operation, we shift to top value and wait for next expression
-  else if (/^-?\d+(\.\d+)?$/.test(bottomValue)) {
+  else if (/^-?\.?\d+(\.\d+)?$/.test(bottomValue)) {
     // if we are in approximator and computation was just done, we throw error
     if (
       mode === "approximator" &&
-      /^-?\d+(\.\d+)? [+x\-÷] \d+(\.\d+)? ≃$/.test(topValue)
+      /^-?\.?\d+(\.\d+)? [+x\-÷] \d+(\.\d+)? ≃$/.test(topValue)
     ) {
       bottomValue = "input digit first!";
     }
     // if we are in approximator and we type a second operator
     else if (
       mode === "approximator" &&
-      /^-?\d+(\.\d+)? [+x\-÷]$/.test(topValue)
+      /^-?\.?\d+(\.\d+)? [+x\-÷]$/.test(topValue)
     ) {
       // we don't do anything
     }
@@ -135,7 +135,7 @@ function inputButton() {
     // if we are in calculator and we type a second operator
     else if (
       mode === "calculator" &&
-      /^-?\d+(\.\d+)? [+x\-÷]$/.test(topValue)
+      /^-?\.?\d+(\.\d+)? [+x\-÷]$/.test(topValue)
     ) {
       // we compute the result by simulating an equal
       result = getResult();
@@ -155,53 +155,49 @@ function inputButton() {
 
 // calculator mode
 function getResult() {
-  // just equal on number
-  if (topValue === "" && /^-?\d+(\.\d+)?$/.test(bottomValue)) {
-    return [bottomValue, ""];
-  }
-  // if operation has been done and we repress equal, don't do anythin
-  else if (
-    /^-?\d+(\.\d+)? [+x\-÷] \d+(\.\d+)? ≃$/.test(topValue) &&
-    /^-?\d+(\.\d+)?$/.test(bottomValue)
-  ) {
-    return [bottomValue, topValue];
-  }
-  // one of the two expression has bad format
-  else if (
-    !/^-?\d+(\.\d+)? [+x\-÷]$/.test(topValue) ||
-    !/^\d+(\.\d+)?$/.test(bottomValue)
-  ) {
-    return ["Error :(", topValue];
-  }
-  // all good, we compute the operation
-  else {
-    const firstValue = Number(topValue.slice(0, -1));
-    const secondValue = Number(bottomValue);
-    const operation = topValue.slice(-1);
-    const operator = operationMap[operation];
-    const result = operate(operator, firstValue, secondValue);
-    const fullOperation = `${firstValue} ${operation} ${bottomValue} ${equalBtn.textContent}`;
-    return [result, fullOperation];
-  }
+  const firstValue = Number(topValue.slice(0, -1));
+  const secondValue = Number(bottomValue);
+  const operation = topValue.slice(-1);
+  const operator = operationMap[operation];
+  const result = operate(operator, firstValue, secondValue);
+  const fullOperation = `${firstValue} ${operation} ${bottomValue} ${equalBtn.textContent}`;
+  return [result, fullOperation];
 }
 
 digitBtns.forEach((button) => button.addEventListener("click", inputButton));
 
-if (mode === "calculator") {
-  equalBtn.addEventListener("click", () => {
-    result = getResult();
-    bottomValue = approximate(result[0]);
+function compute() {
+  // if operation has been done and we re-press equal, don't do anything
+  if (/^-?\.?\d+(\.\d+)? [+x\-÷] \d+(\.\d+)? [≃=]$/.test(topValue)) {
+    return;
+  }
+  // just equal on a numerical expression should do nothing
+  else if (topValue === "" && /^-?\.?\d+(\.\d+)?$/.test(bottomValue)) {
+    return;
+  }
+  // one of the two expression has bad format, we wrote an error
+  else if (
+    !/^-?\.?\d+(\.\d+)? [+x\-÷]$/.test(topValue) ||
+    !/^\d+(\.\d+)?$/.test(bottomValue)
+  ) {
+    bottomValue = "Error :(";
+    displayScreen();
+  }
+  // finally if everything is good
+  else if (mode === "calculator") {
+    const result = getResult();
+    bottomValue = result[0];
     topValue = result[1];
     displayScreen();
-  });
-} else {
-  equalBtn.addEventListener("click", () => {
-    result = getResult();
+  } else {
+    const result = getResult();
     bottomValue = funAnswer(result[0]);
     topValue = result[1];
     displayScreen();
-  });
+  }
 }
+
+equalBtn.addEventListener("click", compute);
 
 function addNumbers(a, b) {
   return a + b;
