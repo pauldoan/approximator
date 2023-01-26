@@ -1,6 +1,6 @@
 # The Approximator
 
-Welcome to the Approximator!
+Welcome to the Approximator! 🧮
 
 This tool is a fun calculator that will help you approximate any computation. Just enter your expression like a regular calculator, and wait for it to generatae an approximation of your result.
 
